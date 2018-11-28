@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /signup
+Disallow: /reset
+Disallow: /login
+Disallow: /password-recovery
+Disallow: /confirm
