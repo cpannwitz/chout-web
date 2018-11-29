@@ -52,7 +52,7 @@ export const initializeFirebase = () => {
   firebase.firestore().settings({ timestampsInSnapshots: true })
   firebase
     .firestore()
-    .enablePersistence()
+    .enablePersistence({experimentalTabSynchronization: true})
     .catch((err) => {
       console.error('Firestore persistence not available.', err)
       // err.code: ['failed-precondition','unimplemented']
