@@ -3,7 +3,7 @@ import React from 'react'
 import logo from './assets/Chout-LogoLight.svg'
 import subtext from './assets/subtext.svg'
 
-import LoginView from './views/LoginView'
+// import LoginView from './views/LoginView'
 
 const App = () => {
   return (
