@@ -1,4 +1,4 @@
-import * as firebase from 'firebase/app'
+import * as Firebase from 'firebase/app'
 import React from 'react'
 
 // These imports load individual services into the firebase namespace.
@@ -34,11 +34,11 @@ export const firebaseuiConfig = {
   signInFlow: 'redirect',
   signInSuccessUrl: '/',
   signInOptions: [
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-    firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+    Firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    Firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    Firebase.auth.TwitterAuthProvider.PROVIDER_ID,
     // firebase.auth.GithubAuthProvider.PROVIDER_ID,
-    firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    Firebase.auth.EmailAuthProvider.PROVIDER_ID,
     // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
     // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
   ],
@@ -47,59 +47,28 @@ export const firebaseuiConfig = {
 }
 
 export const initializeFirebase = () => {
-  firebase.initializeApp(firebaseConfig)
+  Firebase.initializeApp(firebaseConfig)
 
-  firebase.firestore().settings({ timestampsInSnapshots: true })
-  firebase
-    .firestore()
-    .enablePersistence()
+  Firebase.firestore().settings({ timestampsInSnapshots: true })
+  Firebase.firestore()
+    .enablePersistence({ experimentalTabSynchronization: true })
     .catch((err) => {
       console.error('Firestore persistence not available.', err)
       // err.code: ['failed-precondition','unimplemented']
     })
-  firebase.auth().onAuthStateChanged(handleAuthStateChanged)
-  firebase
-    .auth()
+  Firebase.auth().onAuthStateChanged(handleAuthStateChanged)
+  Firebase.auth()
     .signInAnonymously()
     .catch((error) => {
       console.log('​initializeFirebase -> error', error)
     })
-  return firebase
+  return Firebase
 }
 
-export const handleAuthStateChanged = (user?: any) => {
+export const handleAuthStateChanged = (user: Firebase.User | null) => {
   if (user) {
     console.log('​observeAuthStatus -> user', user)
   } else {
     // User is signed out.
   }
-}
-
-export const firebaseContext = (firebase: any) => {
-  GlobalFirebaseContext = React.createContext(firebase)
-  return GlobalFirebaseContext
-}
-
-let GlobalFirebaseContext: any
-
-export const FirebaseProvider = ({ firebase, children }: { firebase: any; children: JSX.Element }) => {
-  const FirebaseContext = firebaseContext(firebase)
-  return <FirebaseContext.Provider value={firebase}>{children}</FirebaseContext.Provider>
-}
-
-export const useFire = () => {
-  return React.useContext(GlobalFirebaseContext)
-}
-
-export const onFire = (pure?: Boolean) => (Component: any) => {
-  const BaseComponent = pure ? React.PureComponent : React.Component
-  class OnFire extends BaseComponent {
-    render() {
-      return <Component firebase={firebase} {...this.props} />
-    }
-  }
-
-  return React.forwardRef((props: any, ref?: React.Ref<OnFire>) => {
-    return <OnFire {...props} forwardedRef={ref} />
-  })
 }

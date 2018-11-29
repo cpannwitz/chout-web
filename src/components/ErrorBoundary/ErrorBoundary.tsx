@@ -29,10 +29,10 @@ export class ErrorBoundary extends React.PureComponent {
     return { hasError: true, theError: error }
   }
 
-  componentDidCatch = (error: Error, info: any) => {
+  componentDidCatch = (error: Error | null, info: object) => {
     console.error('Error: ', error)
-    console.log(info.componentStack)
-    if (process.env.NODE_ENV === 'production') {
+    console.log(info)
+    if (process.env.NODE_ENV === 'production' && error) {
       ErrorLogger.logError(error, info)
     }
   }

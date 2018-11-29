@@ -3,18 +3,18 @@ import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary'
 // import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
+import { firebaseuiConfig } from '../logic/Firebase'
+import * as Firebase from 'firebase/app'
 
-import { firebaseuiConfig, onFire } from '../logic/Firebase'
-
-const Login = onFire()(({ firebase }: { firebase: any }) => {
+const Login = () => {
   return (
     <ErrorBoundary>
       <Positioner>
-        <StyledFirebaseAuth uiConfig={firebaseuiConfig} firebaseAuth={firebase.auth()} />
+        <StyledFirebaseAuth uiConfig={firebaseuiConfig} firebaseAuth={Firebase.auth()} />
       </Positioner>
     </ErrorBoundary>
   )
-})
+}
 
 // Login.propTypes = {}
 // Login.defaultProps = {}
