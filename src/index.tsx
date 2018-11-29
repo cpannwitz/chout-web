@@ -17,8 +17,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // FIREBASE INITIALIZATION
-import { FirebaseProvider, initializeFirebase } from './logic/Firebase'
-const fb = initializeFirebase()
+import { initializeFirebase } from './logic/Firebase'
+initializeFirebase()
 
 // REDUX INITIALIZATION
 import { Provider as ReduxProvider } from 'react-redux'
@@ -31,13 +31,11 @@ import App from './App'
 const AppBase: React.SFC = ({ children }) => {
   return (
     <ReduxProvider store={reduxStore}>
-      <FirebaseProvider firebase={fb}>
-        <MuiThemeProvider theme={muiTheme}>
-          <CssBaseline />
-          <GlobalStyles />
-          <ErrorBoundary>{children}</ErrorBoundary>
-        </MuiThemeProvider>
-      </FirebaseProvider>
+      <MuiThemeProvider theme={muiTheme}>
+        <CssBaseline />
+        <GlobalStyles />
+        <ErrorBoundary>{children}</ErrorBoundary>
+      </MuiThemeProvider>
     </ReduxProvider>
   )
 }
