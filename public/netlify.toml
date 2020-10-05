@@ -1,0 +1,8 @@
+[[plugins]]
+  package = "@sentry/netlify-build-plugin"
+
+  [plugins.inputs]
+    sentryOrg = "christian-pannwitz"
+    sentryProject = "chout-web"
+    sentryRelease = "0.1.0"
+    deployPreviews = false

@@ -1,73 +1,49 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import * as serviceWorker from './serviceWorker'
-
-// STYLE INITIALIZATION
-import { MuiThemeProvider } from '@material-ui/core/styles'
-import { muiTheme } from './styles/muiTheme'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import GlobalStyles from './styles/globalStyles'
-
-// ERROR LOGGER INITIALIZATION
-import ErrorLogger from './logic/ErrorLogger'
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
-
-if (process.env.NODE_ENV === 'production') {
-  ErrorLogger.initializeLogger()
-}
-
-// FIREBASE INITIALIZATION
-import { initializeFirebase } from './logic/Firebase'
-initializeFirebase()
-
-// REDUX INITIALIZATION
-import { Provider as ReduxProvider } from 'react-redux'
-import store from './redux/storeConfig'
-export const reduxStore = store()
-
 import App from './App'
+import * as serviceWorker from './serviceWorker'
+import { GlobalStyles } from './styles/GlobalStyles'
 
-// our Appbase with redux and style provider, also contains notification system base
-const AppBase: React.SFC = ({ children }) => {
+interface AppSetup {
+  children: React.ReactNode
+}
+const AppSetup = ({ children }: AppSetup) => {
   return (
-    <ReduxProvider store={reduxStore}>
-      <MuiThemeProvider theme={muiTheme}>
-        <CssBaseline />
-        <GlobalStyles />
-        <ErrorBoundary>{children}</ErrorBoundary>
-      </MuiThemeProvider>
-    </ReduxProvider>
+    <React.StrictMode>
+      {children}
+      <GlobalStyles />
+    </React.StrictMode>
   )
 }
 
 // pre get the HTML node React DOM renders into
-let entry = document.getElementById('root')
+let rootElement = document.getElementById('root')
 
 // render whole React app into chosen HTML DOM node, public/index.html
 ReactDOM.render(
-  <AppBase>
+  <AppSetup>
     <App />
-  </AppBase>,
-  entry
+  </AppSetup>,
+  rootElement
 )
 
 // Hot Module Replacement API
 declare let module: { hot: any }
-// enable HotModuleReload by Webpack, if we're out of production env
-// accepts all Routes as change params, embedded into the redux and style providers
-if (module.hot && process.env.NODE_ENV !== 'production') {
+// enable HotModuleReload by Webpack, accepts all Routes as change params
+// For more customization options, see: https://medium.com/superhighfives/hot-reloading-create-react-app-73297a00dcad
+if (module.hot) {
   module.hot.accept('./App', () => {
     const NextApp = require('./App').default
     ReactDOM.render(
-      <AppBase>
+      <AppSetup>
         <NextApp />
-      </AppBase>,
-      entry
+      </AppSetup>,
+      rootElement
     )
   })
 }
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
+// Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister()
