@@ -12,10 +12,11 @@ interface AppSetup {
   children: React.ReactNode
 }
 const AppSetup = ({ children }: AppSetup) => {
+  const fbConfig = firebaseConfig()
   return (
     <React.StrictMode>
-      <FirebaseAppProvider firebaseConfig={firebaseConfig()}>
-        <SuspenseWithPerf traceId='app' fallback={LoadingScreen}>
+      <FirebaseAppProvider firebaseConfig={fbConfig}>
+        <SuspenseWithPerf traceId='app' fallback={<LoadingScreen />}>
           {children}
         </SuspenseWithPerf>
       </FirebaseAppProvider>
@@ -25,15 +26,21 @@ const AppSetup = ({ children }: AppSetup) => {
 }
 
 // pre get the HTML node React DOM renders into
-let rootElement = document.getElementById('root')
+const rootElement = document.getElementById('root')
 
 // render whole React app into chosen HTML DOM node, public/index.html
-ReactDOM.render(
+const rootNode = ReactDOM.unstable_createRoot(rootElement as Element)
+rootNode.render(
   <AppSetup>
     <App />
-  </AppSetup>,
-  rootElement
+  </AppSetup>
 )
+// ReactDOM.render(
+//   <AppSetup>
+//     <App />
+//   </AppSetup>,
+//   rootElement
+// )
 
 // Hot Module Replacement API
 declare let module: { hot: any }
@@ -42,11 +49,10 @@ declare let module: { hot: any }
 if (module.hot) {
   module.hot.accept('./App', () => {
     const NextApp = require('./App').default
-    ReactDOM.render(
+    rootNode.render(
       <AppSetup>
         <NextApp />
-      </AppSetup>,
-      rootElement
+      </AppSetup>
     )
   })
 }

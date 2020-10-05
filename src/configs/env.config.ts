@@ -10,7 +10,8 @@ export function envConfig() {
     REACT_APP_FIREBASE_APIKEY,
     REACT_APP_FIREBASE_PROJECTID,
     REACT_APP_FIREBASE_MESSAGINGID,
-    REACT_APP_FIREBASE_APPID
+    REACT_APP_FIREBASE_APPID,
+    REACT_APP_FIREBASE_CLIENTID
   } = process.env
   return {
     isTestEnv: NODE_ENV === 'test' || Boolean(CI) === true,
@@ -23,7 +24,8 @@ export function envConfig() {
       apiKey: REACT_APP_FIREBASE_APIKEY,
       projectId: REACT_APP_FIREBASE_PROJECTID,
       messagingSenderId: REACT_APP_FIREBASE_MESSAGINGID,
-      appId: REACT_APP_FIREBASE_APPID
+      appId: REACT_APP_FIREBASE_APPID,
+      clientId: REACT_APP_FIREBASE_CLIENTID
     }
   }
 }

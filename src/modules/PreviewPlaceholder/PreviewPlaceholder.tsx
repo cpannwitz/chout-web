@@ -22,14 +22,18 @@ const MainLogo = styled.img({
 })
 const SubLogo = styled.img({
   width: '14rem',
-  marginTop: '4rem'
+  margin: '4rem 0'
 })
 
-export const PreviewPlaceholder = () => {
+interface PreviewPlaceholderProps {
+  children?: React.ReactNode
+}
+export const PreviewPlaceholder = ({ children }: PreviewPlaceholderProps) => {
   return (
     <Container>
       <MainLogo src={logo} alt='chout logo' />
       <SubLogo src={subtext} alt='sub logo' />
+      {children}
     </Container>
   )
 }
