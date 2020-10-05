@@ -2,6 +2,6 @@
   package = "@sentry/netlify-build-plugin"
 
   [plugins.inputs]
-    sentryOrg = "christian-pannwitz"
+    sentryOrg = "cpannwitz"
     sentryProject = "chout-web"
     sentryRelease = "0.1.0"
