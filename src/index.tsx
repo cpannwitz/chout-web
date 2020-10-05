@@ -2,7 +2,11 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
+
 import { GlobalStyles } from './styles/GlobalStyles'
+import { firebaseConfig } from './configs'
+import { FirebaseAppProvider, SuspenseWithPerf } from 'reactfire'
+import LoadingScreen from './modules/LoadingScreen'
 
 interface AppSetup {
   children: React.ReactNode
@@ -10,7 +14,11 @@ interface AppSetup {
 const AppSetup = ({ children }: AppSetup) => {
   return (
     <React.StrictMode>
-      {children}
+      <FirebaseAppProvider firebaseConfig={firebaseConfig()}>
+        <SuspenseWithPerf traceId='app' fallback={LoadingScreen}>
+          {children}
+        </SuspenseWithPerf>
+      </FirebaseAppProvider>
       <GlobalStyles />
     </React.StrictMode>
   )
