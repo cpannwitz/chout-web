@@ -138,7 +138,7 @@ jsconfig.json
 # Misc
 # =========================
 /misc
-apollo.config.js
+# apollo.config.js
 
 # OSX
 # =========================

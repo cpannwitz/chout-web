@@ -2,12 +2,12 @@ import * as Sentry from '@sentry/react'
 
 import { envConfig } from './env.config'
 
-export function errorTrackerConfig() {
-  const env = envConfig()
+export function errorTrackerConfig(config?: Partial<Sentry.BrowserOptions>) {
   return {
-    dsn: env.errorTrackerToken,
+    dsn: envConfig.errorTrackerToken,
     environment: '',
-    enabled: env.isStagingEnv || env.isProdEnv,
-    release: env.version
+    enabled: envConfig.isStagingEnv || envConfig.isProdEnv,
+    release: envConfig.version,
+    ...config
   } as Sentry.BrowserOptions
 }

@@ -1,21 +1,25 @@
 import React from 'react'
-
+import firebase from 'firebase/app'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
-import { useAuth, useUser } from 'reactfire'
+import { firebaseUIConfig } from '../../configs/firebaseUI.config'
 
-import { firebaseUIConfig } from '../../configs'
+import { useAuthenticationContext } from '../../components/Authentication'
+import LoadIndicator from '../../components/LoadIndicator'
 
 export function Authentication() {
-  const auth = useAuth()
-  const user = useUser(auth)
+  const auth = useAuthenticationContext()
   const config = firebaseUIConfig({})
+  const fbauth = firebase.auth()
 
   const signOutUser = React.useCallback(() => {
-    auth.signOut()
-  }, [auth])
+    fbauth.signOut()
+  }, [fbauth])
 
-  if (user) {
+  if (auth.isLoading) {
+    return <LoadIndicator />
+  }
+  if (auth.isAuthenticated) {
     return <button onClick={signOutUser}>Logout</button>
   }
-  return <StyledFirebaseAuth uiConfig={config} firebaseAuth={auth} />
+  return <StyledFirebaseAuth uiConfig={config} firebaseAuth={fbauth} />
 }
