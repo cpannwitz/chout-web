@@ -2,24 +2,29 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
+import { ApolloProvider } from '@apollo/client'
+import { graphqlClient } from './services/graphql.service'
+
+import { AuthenticationProvider } from './components/Authentication'
+import { initializeFirebase } from './services/firebase.service'
 
 import { GlobalStyles } from './styles/GlobalStyles'
-import { firebaseConfig } from './configs'
-import { FirebaseAppProvider, SuspenseWithPerf } from 'reactfire'
 import LoadingScreen from './modules/LoadingScreen'
+
+// * Setup
+initializeFirebase()
 
 interface AppSetup {
   children: React.ReactNode
 }
 const AppSetup = ({ children }: AppSetup) => {
-  const fbConfig = firebaseConfig()
   return (
     <React.StrictMode>
-      <FirebaseAppProvider firebaseConfig={fbConfig}>
-        <SuspenseWithPerf traceId='app' fallback={<LoadingScreen />}>
-          {children}
-        </SuspenseWithPerf>
-      </FirebaseAppProvider>
+      <ApolloProvider client={graphqlClient}>
+        <AuthenticationProvider>
+          <React.Suspense fallback={<LoadingScreen />}>{children}</React.Suspense>
+        </AuthenticationProvider>
+      </ApolloProvider>
       <GlobalStyles />
     </React.StrictMode>
   )
@@ -29,18 +34,12 @@ const AppSetup = ({ children }: AppSetup) => {
 const rootElement = document.getElementById('root')
 
 // render whole React app into chosen HTML DOM node, public/index.html
-const rootNode = ReactDOM.unstable_createRoot(rootElement as Element)
-rootNode.render(
+ReactDOM.render(
   <AppSetup>
     <App />
-  </AppSetup>
+  </AppSetup>,
+  rootElement
 )
-// ReactDOM.render(
-//   <AppSetup>
-//     <App />
-//   </AppSetup>,
-//   rootElement
-// )
 
 // Hot Module Replacement API
 declare let module: { hot: any }
@@ -49,10 +48,11 @@ declare let module: { hot: any }
 if (module.hot) {
   module.hot.accept('./App', () => {
     const NextApp = require('./App').default
-    rootNode.render(
+    ReactDOM.render(
       <AppSetup>
         <NextApp />
-      </AppSetup>
+      </AppSetup>,
+      rootElement
     )
   })
 }
